@@ -71,11 +71,7 @@ function renderTable(data) {
 
     const counts = { RUNNING: 0, IDLE: 0, DOWNTIME: 0, MAINTENANCE: 0, OFFLINE: 0 };
     data.forEach(e => { if (counts[e.status] !== undefined) counts[e.status]++; });
-    document.getElementById('s-running').textContent     = counts.RUNNING;
-    document.getElementById('s-idle').textContent        = counts.IDLE;
-    document.getElementById('s-downtime').textContent    = counts.DOWNTIME;
-    document.getElementById('s-maintenance').textContent = counts.MAINTENANCE;
-    document.getElementById('s-offline').textContent     = counts.OFFLINE;
+    updateStatBar(counts);
 
     if (!data.length) {
         tbody.innerHTML = `<tr><td colspan="8" class="empty-state">NO RECORDS FOUND</td></tr>`;
@@ -220,18 +216,43 @@ async function deleteEquipment(id) {
     if (res.ok) loadAll();
 }
 
+function updateStatBar(counts) {
+    document.getElementById('s-running').textContent     = counts.RUNNING;
+    document.getElementById('s-idle').textContent        = counts.IDLE;
+    document.getElementById('s-downtime').textContent    = counts.DOWNTIME;
+    document.getElementById('s-maintenance').textContent = counts.MAINTENANCE;
+    document.getElementById('s-offline').textContent     = counts.OFFLINE;
+}
+
+function readCurrentCounts() {
+    return {
+        RUNNING:     parseInt(document.getElementById('s-running').textContent)     || 0,
+        IDLE:        parseInt(document.getElementById('s-idle').textContent)        || 0,
+        DOWNTIME:    parseInt(document.getElementById('s-downtime').textContent)    || 0,
+        MAINTENANCE: parseInt(document.getElementById('s-maintenance').textContent) || 0,
+        OFFLINE:     parseInt(document.getElementById('s-offline').textContent)     || 0,
+    };
+}
 // ── QUICK STATUS PATCH ──
 async function quickStatus(id, newStatus, selectEl) {
+    const row = document.getElementById(`row-${id}`);
+    const badgeDiv = row ? row.querySelector('.status-badge:not(select)') : null;
+    const oldStatus = badgeDiv
+        ? [...badgeDiv.classList].find(c => c.startsWith('status-') && c !== 'status-badge')?.replace('status-', '')
+        : null;
+
     const res = await apiFetch('PATCH', `${API}/${id}/status`, { status: newStatus });
     if (res.ok) {
         selectEl.className = `status-select-inline status-badge status-${newStatus}`;
-        const row = document.getElementById(`row-${id}`);
-        if (row) {
-            const badgeDiv = row.querySelector('.status-badge:not(select)');
-            if (badgeDiv) {
-                badgeDiv.className = `status-badge status-${newStatus}`;
-                badgeDiv.innerHTML = `<div class="status-dot dot-${newStatus}"></div>${newStatus}`;
-            }
+        if (badgeDiv) {
+            badgeDiv.className = `status-badge status-${newStatus}`;
+            badgeDiv.innerHTML = `<div class="status-dot dot-${newStatus}"></div>${newStatus}`;
+        }
+        if (oldStatus && oldStatus !== newStatus) {
+            const counts = readCurrentCounts();
+            if (counts[oldStatus] !== undefined) counts[oldStatus] = Math.max(0, counts[oldStatus] - 1);
+            if (counts[newStatus] !== undefined) counts[newStatus]++;
+            updateStatBar(counts);
         }
     } else {
         loadAll();
