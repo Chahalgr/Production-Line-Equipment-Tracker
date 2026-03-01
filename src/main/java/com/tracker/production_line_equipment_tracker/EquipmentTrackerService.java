@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -14,7 +15,6 @@ public class EquipmentTrackerService
     private final EquipmentTrackerRepository repo;
     private final int maxNoMaintenanceDays = 60;
     private final int maxOperationalHours = 1445;
-    private final LocalDate cutoff = LocalDate.now().minusDays(maxNoMaintenanceDays);
 
     public EquipmentTrackerService(EquipmentTrackerRepository etr)
     {
@@ -22,17 +22,16 @@ public class EquipmentTrackerService
     }
 
     /**
-     * Retrieve all equipment records.
+     * Retrieve all equipment records with optional filters
      */
-    public List<EquipmentDTO> getAllEquipment()
+    public List<EquipmentDTO> getAll(EquipmentStatus status, String location, String name)
     {
-        List<Equipment> eqList = repo.findAll();
-        List<EquipmentDTO> list = new ArrayList<EquipmentDTO>();
-        for(Equipment e: eqList)
-        {
-            list.add(toDto(e));
-        }
-        return list;
+        return repo.findAll().stream()
+                .filter(e -> status == null || e.getStatus() == status)
+                .filter(e -> location == null || e.getLocation().equals(location))
+                .filter(e -> name == null || e.getName().equals(name))
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -51,7 +50,7 @@ public class EquipmentTrackerService
     {
         Equipment eq = this.toEntity(equipment);
         Equipment entered = repo.save(eq);
-        return toDto(eq);
+        return toDto(entered);
     }
 
     /**
@@ -100,29 +99,13 @@ public class EquipmentTrackerService
     {
         List<Equipment> eq = repo.findAll();
         List<EquipmentDTO> list = new ArrayList<EquipmentDTO>();
+        LocalDate cutoff = LocalDate.now().minusDays(maxNoMaintenanceDays);
         for(Equipment e: eq)
         {
             LocalDate lastDate = e.getLastMaintenanceDate();
             int opHours = e.getOperationalHours();
             if(lastDate.isBefore(cutoff)
                 || opHours >= maxOperationalHours)
-            {
-                list.add(toDto(e));
-            }
-        }
-        return list;
-    }
-
-    /**
-     * Filter equipment by current status.
-     */
-    public List<EquipmentDTO> getEquipmentByStatus(EquipmentStatus status)
-    {
-        List<Equipment> equipmentList = repo.findAll();
-        List<EquipmentDTO> list = new ArrayList<EquipmentDTO>();
-        for(Equipment e: equipmentList)
-        {
-            if(e.getStatus() == status)
             {
                 list.add(toDto(e));
             }

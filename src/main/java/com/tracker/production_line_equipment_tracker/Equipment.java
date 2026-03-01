@@ -19,6 +19,7 @@ public class Equipment
     @Enumerated(EnumType.STRING)
     private EquipmentStatus status;
 
+    @Column(nullable = false)
     private LocalDate lastMaintenanceDate;
     private int operationalHours;
 

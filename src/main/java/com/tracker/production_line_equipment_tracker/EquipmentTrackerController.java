@@ -25,7 +25,7 @@ public class EquipmentTrackerController
             @RequestParam(required = false) EquipmentStatus status,
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String name) {
-        return null;
+        return service.getAll(status, location, name);
     }
 
     /**
@@ -34,7 +34,7 @@ public class EquipmentTrackerController
      */
     @GetMapping("/{id}")
     public EquipmentDTO getById(@PathVariable Long id) {
-        return null;
+        return service.getEquipmentById(id);
     }
 
     /**
@@ -44,7 +44,7 @@ public class EquipmentTrackerController
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EquipmentDTO create( @RequestBody EquipmentDTO equipment) {
-        return null;
+        return service.createEquipment(equipment);
     }
 
     /**
@@ -53,7 +53,7 @@ public class EquipmentTrackerController
      */
     @PutMapping("/{id}")
     public EquipmentDTO update(@PathVariable Long id, @RequestBody EquipmentDTO equipment) {
-        return null;
+        return service.updateEquipment(id, equipment);
     }
 
     /**
@@ -63,8 +63,10 @@ public class EquipmentTrackerController
     @PatchMapping("/{id}/status")
     public EquipmentDTO updateStatus(
             @PathVariable Long id,
-            @RequestBody Map<String, Object> payload) {
-            return null;
+            @RequestBody Map<String, Object> payload)
+    {
+        EquipmentStatus status = EquipmentStatus.valueOf((String) payload.get("status"));
+        return service.updateStatus(id, status);
     }
 
     /**
@@ -72,8 +74,9 @@ public class EquipmentTrackerController
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-
+    public void delete(@PathVariable Long id)
+    {
+        service.deleteEquipment(id);
     }
 
     /**
@@ -81,7 +84,8 @@ public class EquipmentTrackerController
      * Quick report endpoint for maintenance candidates.
      */
     @GetMapping("/maintenance-due")
-    public List<EquipmentDTO> getMaintenanceDue() {
-        return null;
+    public List<EquipmentDTO> getMaintenanceDue()
+    {
+        return service.getMaintenanceDue();
     }
 }

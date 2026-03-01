@@ -1,4 +1,7 @@
 package com.tracker.production_line_equipment_tracker;
+
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 /**
@@ -16,6 +19,7 @@ public class EquipmentDTO {
     private String type;
     private String location;
     private EquipmentStatus status;
+    @NotNull
     private LocalDate lastMaintenanceDate;
     private Integer operationalHours;
 
