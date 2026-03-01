@@ -1,0 +1,22 @@
+services:
+  db:
+    container_name: postgres-equipment-tracker
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: tracker
+      POSTGRES_PASSWORD: tracker123
+      POSTGRES_DB: equipment_tracker
+    volumes:
+      - db:/data/postgres
+    ports:
+      - "5332:5432"
+    networks:
+      - db
+    restart: unless-stopped
+
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:

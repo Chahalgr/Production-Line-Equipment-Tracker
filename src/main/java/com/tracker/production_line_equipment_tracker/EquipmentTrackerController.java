@@ -81,7 +81,7 @@ public class EquipmentTrackerController
      * Quick report endpoint for maintenance candidates.
      */
     @GetMapping("/maintenance-due")
-    public List<Equipment> getMaintenanceDue() {
+    public List<EquipmentDTO> getMaintenanceDue() {
         return null;
     }
 }
