@@ -77,17 +77,4 @@ public class Equipment
     public void setName(String name) {
         this.name = name;
     }
-//    public Equipment(String name, String type, String location, String status, LocalDate date, int operationalHours)
-//    {
-//        this.name = name;
-//        this.type = type;
-//        this.location = location;
-//        this.status = status;
-//        this.lastMaintenanceDate = date;
-//        this.operationalHours = operationalHours;
-//    }
-//
-//    public Equipment() {
-//
-//    }
 }
