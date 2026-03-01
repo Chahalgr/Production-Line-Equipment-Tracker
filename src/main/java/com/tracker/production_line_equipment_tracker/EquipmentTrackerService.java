@@ -131,6 +131,8 @@ public class EquipmentTrackerService
         dto.setType(entity.getType());
         dto.setLocation(entity.getLocation());
         dto.setStatus(entity.getStatus());
+        dto.setLastMaintenanceDate(entity.getLastMaintenanceDate());
+        dto.setOperationalHours(entity.getOperationalHours());
         return dto;
     }
 }
