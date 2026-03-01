@@ -1,4 +1,4 @@
-const API = 'http://localhost:8080/api/equipment';
+const API = '/api/equipment';
 let editingId = null;
 
 // ── CLOCK ──
