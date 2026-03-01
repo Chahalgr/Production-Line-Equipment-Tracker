@@ -50,11 +50,20 @@ header {
     z-index: 10;
     background: linear-gradient(180deg, #0d1014 0%, transparent 100%);
     border-bottom: 2px solid var(--amber);
-    padding: 0 24px;
+    padding: 0 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 64px;
+    height: 56px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+@media (min-width: 600px) {
+    header {
+        padding: 0 24px;
+        height: 64px;
+    }
 }
 
 header::after {
@@ -70,53 +79,83 @@ header::after {
 .header-left {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
 .logo-icon {
-    width: 36px; height: 36px;
+    width: 30px; height: 30px;
     position: relative;
+    flex-shrink: 0;
+}
+
+@media (min-width: 600px) {
+    .logo-icon { width: 36px; height: 36px; }
 }
 
 .logo-icon svg { width: 100%; height: 100%; }
 
 .header-title {
     font-family: var(--display);
-    font-size: 22px;
+    font-size: 17px;
     font-weight: 700;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--amber);
 }
 
+@media (min-width: 600px) {
+    .header-title { font-size: 22px; letter-spacing: 3px; }
+}
+
 .header-sub {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 9px;
     color: var(--dim);
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    display: none;
+}
+
+@media (min-width: 480px) {
+    .header-sub { display: block; letter-spacing: 2px; font-size: 10px; }
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
+}
+
+@media (min-width: 600px) {
+    .header-right { gap: 20px; }
 }
 
 .clock {
     font-family: var(--mono);
-    font-size: 18px;
+    font-size: 14px;
     color: var(--amber);
     letter-spacing: 2px;
+}
+
+@media (min-width: 600px) {
+    .clock { font-size: 18px; }
 }
 
 .system-status {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10px;
     color: var(--green);
     letter-spacing: 1px;
+}
+
+/* hide "SYSTEM ONLINE" text on very small screens */
+.system-status span {
+    display: none;
+}
+@media (min-width: 420px) {
+    .system-status span { display: inline; }
 }
 
 .pulse {
@@ -124,6 +163,7 @@ header::after {
     border-radius: 50%;
     background: var(--green);
     animation: pulse 2s infinite;
+    flex-shrink: 0;
 }
 
 @keyframes pulse {
@@ -135,12 +175,29 @@ header::after {
 .main {
     position: relative;
     z-index: 1;
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    grid-template-rows: auto auto 1fr;
-    gap: 12px;
-    padding: 16px;
-    height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    /* No fixed height — let content flow naturally on mobile */
+}
+
+/* On larger screens: side-by-side with console on the right */
+@media (min-width: 900px) {
+    .main {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        grid-template-rows: auto auto 1fr;
+        gap: 12px;
+        padding: 16px;
+        height: calc(100vh - 64px);
+    }
+}
+
+@media (min-width: 1100px) {
+    .main {
+        grid-template-columns: 1fr 340px;
+    }
 }
 
 /* ── PANELS ── */
@@ -163,18 +220,24 @@ header::after {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 16px;
+    padding: 10px 14px;
     border-bottom: 1px solid var(--border);
     background: var(--steel);
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
 .panel-title {
     font-family: var(--display);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--amber);
+}
+
+@media (min-width: 600px) {
+    .panel-title { font-size: 13px; }
 }
 
 .panel-badge {
@@ -189,18 +252,29 @@ header::after {
 
 /* ── FILTER BAR ── */
 .filter-bar {
-    grid-column: 1;
-    padding: 12px 16px;
+    padding: 12px 14px !important;
     display: flex;
     gap: 10px;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
+}
+
+/* Grid placement for desktop */
+@media (min-width: 900px) {
+    .filter-bar {
+        grid-column: 1;
+        grid-row: 1;
+        align-items: flex-end;
+    }
 }
 
 .filter-group {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1 1 120px;
+    min-width: 100px;
+    max-width: 220px;
 }
 
 .filter-label {
@@ -219,7 +293,8 @@ select, input[type="text"], input[type="number"], input[type="date"] {
     font-size: 12px;
     padding: 7px 10px;
     outline: none;
-    min-width: 130px;
+    width: 100%;
+    min-width: unset;
     transition: border-color 0.2s;
     appearance: none;
     -webkit-appearance: none;
@@ -242,16 +317,21 @@ select option { background: var(--steel); }
 /* ── BUTTONS ── */
 .btn {
     font-family: var(--display);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    padding: 8px 18px;
+    padding: 8px 14px;
     border: none;
     cursor: pointer;
     transition: all 0.15s;
     position: relative;
     overflow: hidden;
+    white-space: nowrap;
+}
+
+@media (min-width: 600px) {
+    .btn { font-size: 13px; padding: 8px 18px; }
 }
 
 .btn-amber {
@@ -275,7 +355,7 @@ select option { background: var(--steel); }
     color: var(--red);
     border: 1px solid var(--red);
     font-size: 11px;
-    padding: 4px 10px;
+    padding: 4px 8px;
     letter-spacing: 1px;
 }
 
@@ -286,7 +366,7 @@ select option { background: var(--steel); }
     color: var(--blue);
     border: 1px solid var(--blue);
     font-size: 11px;
-    padding: 4px 10px;
+    padding: 4px 8px;
     letter-spacing: 1px;
 }
 
@@ -296,17 +376,41 @@ select option { background: var(--steel); }
     display: flex;
     gap: 8px;
     align-items: flex-end;
+    flex-wrap: wrap;
     margin-top: 14px;
+    flex: 1 1 auto;
 }
 
 /* ── FORM PANEL ── */
-.form-panel { grid-column: 1; }
+.form-panel {
+    /* stacks naturally in flex column layout */
+}
+
+@media (min-width: 900px) {
+    .form-panel {
+        grid-column: 1;
+        grid-row: 2;
+    }
+}
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
-    padding: 14px 16px;
+    padding: 12px 14px;
+}
+
+@media (min-width: 600px) {
+    .form-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .form-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        padding: 14px 16px;
+    }
 }
 
 .form-group {
@@ -329,10 +433,11 @@ select option { background: var(--steel); }
 }
 
 .form-actions {
-    padding: 0 16px 14px;
+    padding: 0 14px 12px;
     display: flex;
     gap: 10px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .editing-badge {
@@ -344,36 +449,48 @@ select option { background: var(--steel); }
 
 /* ── TABLE PANEL ── */
 .table-panel {
-    grid-column: 1;
-    grid-row: 3;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    /* On mobile, give a min-height so table is usable */
+    min-height: 300px;
+}
+
+@media (min-width: 900px) {
+    .table-panel {
+        grid-column: 1;
+        grid-row: 3;
+        /* fills remaining height in the grid */
+        min-height: 0;
+    }
 }
 
 .table-wrap {
+    overflow-x: auto;   /* horizontal scroll on small screens */
     overflow-y: auto;
     flex: 1;
+    -webkit-overflow-scrolling: touch;
 }
 
-.table-wrap::-webkit-scrollbar { width: 6px; }
+.table-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
 .table-wrap::-webkit-scrollbar-track { background: var(--steel); }
 .table-wrap::-webkit-scrollbar-thumb { background: var(--border2); }
 
 table {
     width: 100%;
+    min-width: 640px; /* prevents columns squishing; horizontal scroll kicks in */
     border-collapse: collapse;
     font-family: var(--body);
 }
 
 thead th {
     font-family: var(--display);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--dim);
-    padding: 10px 14px;
+    padding: 9px 10px;
     text-align: left;
     background: var(--steel);
     border-bottom: 1px solid var(--border2);
@@ -381,6 +498,10 @@ thead th {
     position: sticky;
     top: 0;
     z-index: 2;
+}
+
+@media (min-width: 900px) {
+    thead th { font-size: 11px; padding: 10px 14px; }
 }
 
 tbody tr {
@@ -391,16 +512,20 @@ tbody tr {
 tbody tr:hover { background: rgba(255,255,255,0.02); }
 
 tbody td {
-    padding: 10px 14px;
-    font-size: 14px;
+    padding: 9px 10px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--text);
     vertical-align: middle;
 }
 
+@media (min-width: 900px) {
+    tbody td { padding: 10px 14px; font-size: 14px; }
+}
+
 .id-cell {
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 11px;
     color: var(--dim);
 }
 
@@ -408,11 +533,11 @@ tbody td {
 .status-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 1px;
-    padding: 3px 10px;
+    padding: 3px 8px;
     border-radius: 2px;
     white-space: nowrap;
 }
@@ -420,6 +545,7 @@ tbody td {
 .status-dot {
     width: 6px; height: 6px;
     border-radius: 50%;
+    flex-shrink: 0;
 }
 
 .status-RUNNING     { background: var(--green-dim);  color: var(--green);  border: 1px solid var(--green); }
@@ -439,32 +565,42 @@ tbody td {
 
 .actions-cell {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .empty-state {
     text-align: center;
-    padding: 40px;
+    padding: 40px 20px;
     font-family: var(--mono);
-    font-size: 13px;
+    font-size: 12px;
     color: var(--dim);
     letter-spacing: 2px;
 }
 
 /* ── CONSOLE PANEL ── */
 .console-panel {
-    grid-column: 2;
-    grid-row: 1 / 4;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    /* On mobile: fixed compact height */
+    max-height: 260px;
+}
+
+@media (min-width: 900px) {
+    .console-panel {
+        grid-column: 2;
+        grid-row: 1 / 4;
+        max-height: none;
+        /* fills full grid height */
+    }
 }
 
 .console-body {
     flex: 1;
     overflow-y: auto;
-    padding: 12px;
+    padding: 10px 12px;
     font-family: var(--mono);
     font-size: 11px;
     line-height: 1.8;
@@ -513,8 +649,8 @@ tbody td {
     border: 1px solid var(--border2);
     color: var(--text);
     font-family: var(--mono);
-    font-size: 11px;
-    padding: 4px 10px 4px 24px;
+    font-size: 10px;
+    padding: 4px 10px 4px 20px;
     cursor: pointer;
     min-width: unset;
     width: auto;
@@ -522,7 +658,7 @@ tbody td {
     -webkit-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23556070'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: left 8px center;
+    background-position: left 6px center;
     border-radius: 2px;
 }
 
@@ -534,16 +670,17 @@ tbody td {
 /* ── STAT BAR ── */
 .stat-bar {
     display: flex;
-    gap: 1px;
-    padding: 10px 16px;
+    gap: 0;
+    padding: 8px 12px;
     border-bottom: 1px solid var(--border);
     background: var(--steel);
+    overflow-x: auto;
 }
 
 .stat-item {
-    flex: 1;
+    flex: 1 0 56px;
     text-align: center;
-    padding: 6px 4px;
+    padding: 5px 4px;
     border-right: 1px solid var(--border);
 }
 
@@ -551,14 +688,18 @@ tbody td {
 
 .stat-val {
     font-family: var(--display);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     line-height: 1;
 }
 
+@media (min-width: 600px) {
+    .stat-val { font-size: 22px; }
+}
+
 .stat-lbl {
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 8px;
     color: var(--dim);
     letter-spacing: 1px;
     margin-top: 2px;
@@ -574,7 +715,7 @@ tbody td {
 /* ── MAINTENANCE WARNING ── */
 .maint-warning {
     display: none;
-    margin: 0 16px 10px;
+    margin: 8px 14px;
     padding: 8px 12px;
     border: 1px solid var(--amber);
     background: rgba(232,160,32,0.08);
