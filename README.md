@@ -15,7 +15,7 @@ The application enables users to interact with persistent data through a clean R
 ---
 
 ## Live Deployment
-👉 **[Live Application:](https://production-line-equipment-tracker-production.up.railway.app/)** 
+👉 **[Live Application](https://production-line-equipment-tracker-production.up.railway.app/)** 
 
 ---
 
@@ -123,8 +123,4 @@ A full stack application built as a backend-focused learning and showcase projec
 - ORM & Database Design
 - Containerized Deployment
 
----
-
-## 📄 License
-
-Specify license here (MIT / Apache 2.0 / etc.)
+[LinkedIn](https://www.linkedin.com/in/-gurleen-singh/)
